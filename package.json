@@ -1,0 +1,28 @@
+{
+  "name": "vxtwitter-discordbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sheraw91/VXTwitter-DiscordBot.git"
+  },
+  "keywords": [
+    "Discord",
+    "Bot"
+  ],
+  "author": "Sheraw91",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sheraw91/VXTwitter-DiscordBot/issues"
+  },
+  "homepage": "https://github.com/Sheraw91/VXTwitter-DiscordBot#readme",
+  "dependencies": {
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3"
+  }
+}
