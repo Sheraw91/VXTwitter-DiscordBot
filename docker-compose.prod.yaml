@@ -5,12 +5,12 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: on-failure
-    container_name: vxtwitter_dev
-    command: npm run dev
+    container_name: vxtwitter_prod
+    command: npm start
     volumes:
       - /usr/src/app/node_modules
       - .:/usr/src/app
     environment:
-      - NODE_ENV=dev
+      - NODE_ENV=prod
     env_file:
       - .env
