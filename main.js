@@ -9,7 +9,7 @@ bot.on('ready', async () => {
 })
 
 bot.on('messageCreate', async message => {
-  if (message.author.bot || !hasTwitterLink(message.content)) return
+  if (!hasTwitterLink(message.content) || message.author.bot) return
 
   const rep = getVxTwitterLink(message.content)
 
