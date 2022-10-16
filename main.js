@@ -1,5 +1,6 @@
 const { Client, ActionRowBuilder, ButtonBuilder } = require('discord.js')
 const { hasTwitterLink, getVxTwitterLink } = require('./functions/regex')
+const { checkLinkIfVideo } = require('./functions/checkUrl')
 const deleteMessage = require('./interactions/buttons/deleteMessage')
 require('dotenv').config()
 
@@ -11,6 +12,8 @@ bot.on('ready', async () => {
 
 bot.on('messageCreate', async message => {
   if (!hasTwitterLink(message.content) || message.author.bot) return
+  const isVideo =  await checkLinkIfVideo(message.content)
+  if (!isVideo) return
 
   const rep = getVxTwitterLink(message.content)
   const deleteButton = new ActionRowBuilder()
