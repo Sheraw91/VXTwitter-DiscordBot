@@ -14,7 +14,7 @@ bot.on('messageCreate', async message => {
   const rep = getVxTwitterLink(message.content)
 
   message.reply(`> <@!${message.author.id}>\n${rep}`)
-    .then(async m => message.delete())
+    .then(m => message.delete())
 })
 
 bot.login(process.env.TOKEN)
