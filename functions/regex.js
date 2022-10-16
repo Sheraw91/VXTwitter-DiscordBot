@@ -9,7 +9,6 @@ const getVxTwitterLink = (message) => {
 
   while ((m = regexLink.exec(message)) !== null) {
     if (m.index === regexLink.lastIndex) regexLink.lastIndex++
-
     newMessage = newMessage.replace(m[0], `${vxBaseUrl}${m[2]}`)
   }
 
