@@ -1,6 +1,5 @@
 const { Client, ActionRowBuilder, ButtonBuilder } = require('discord.js')
 const { hasTwitterLink, getVxTwitterLink } = require('./functions/regex')
-const { checkLinkIfVideo } = require('./functions/checkUrl')
 const deleteMessage = require('./interactions/buttons/deleteMessage')
 require('dotenv').config()
 
@@ -12,10 +11,10 @@ bot.on('ready', async () => {
 
 bot.on('messageCreate', async message => {
   if (!hasTwitterLink(message.content) || message.author.bot) return
-  const isVideo =  await checkLinkIfVideo(message.content)
-  if (!isVideo) return
 
-  const rep = getVxTwitterLink(message.content)
+  const rep = await getVxTwitterLink(message.content).catch(console.error)
+  if (rep.video <= 0) return
+
   const deleteButton = new ActionRowBuilder()
     .addComponents([
       new ButtonBuilder()
@@ -29,7 +28,7 @@ bot.on('messageCreate', async message => {
     ])
 
   message.reply({
-    content: `> <@!${message.author.id}>\n${rep}`,
+    content: `> <@!${message.author.id}>\n${rep.message}`,
     components: [deleteButton]
   })
     .then(m => message.delete())
