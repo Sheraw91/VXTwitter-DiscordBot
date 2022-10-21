@@ -12,7 +12,9 @@ bot.on('ready', async () => {
 bot.on('messageCreate', async message => {
   if (!hasTwitterLink(message.content) || message.author.bot) return
 
-  const rep = getVxTwitterLink(message.content)
+  const resp = await getVxTwitterLink(message.content)
+  if (resp.video <= 0) return
+
   const deleteButton = new ActionRowBuilder()
     .addComponents([
       new ButtonBuilder()
@@ -26,7 +28,7 @@ bot.on('messageCreate', async message => {
     ])
 
   message.reply({
-    content: `> <@!${message.author.id}>\n${rep}`,
+    content: `> <@!${message.author.id}>\n${resp.message}`,
     components: [deleteButton]
   })
     .then(m => message.delete())
