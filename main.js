@@ -1,28 +1,49 @@
-const Discord = require("discord.js")
+const { Client, ActionRowBuilder, ButtonBuilder } = require('discord.js')
+const { hasTwitterLink, getVxTwitterLink } = require('./functions/regex')
+const deleteMessage = require('./interactions/buttons/deleteMessage')
 require('dotenv').config()
 
-const bot = new Discord.Client({ intents: 3276799 })
+const bot = new Client({ intents: 3276799 })
 
-console.log(process.env.TOKEN)
-bot.login(process.env.TOKEN)
-
-const hasTwitterLink = (message) => {
-  const regex_link = new RegExp(/(https?:\/\/(.+?\.)?twitter\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)?)/, "igm")
-  return regex_link.test(message)
-}
-
-const getLink = (message) => {
-  return message.match(/\bhttps?:\/\/\S+/gi)
-}
-
-bot.on("ready", async () => {
+bot.on('ready', async () => {
   console.log(bot.user)
 })
 
 bot.on('messageCreate', async message => {
-  if(!message.author.bot && hasTwitterLink(message.content)) {
-    const link = getLink(message.content)
-    const updatedLink = link[0].replace(/twitter/g, "vxtwitter")
-    message.reply(updatedLink)
-  }
+  if (!hasTwitterLink(message.content) || message.author.bot) return
+
+  const resp = await getVxTwitterLink(message.content)
+  if (resp.video <= 0) return
+
+  const deleteButton = new ActionRowBuilder()
+    .addComponents([
+      new ButtonBuilder()
+        .setCustomId(JSON.stringify({
+          id: 'deleteMessage',
+          userId: message.author.id
+        }))
+        .setLabel('Delete')
+        .setStyle(4)
+        .setDisabled(false)
+    ])
+
+  message.reply({
+    content: `> <@!${message.author.id}>\n${resp.message}`,
+    components: [deleteButton]
+  })
+    .then(m => message.delete())
+    .catch(console.error)
 })
+
+bot.on('interactionCreate', async interaction => {
+  if (interaction.isButton())
+    interaction
+      .deferUpdate()
+      .then(() => {
+        const json = JSON.parse(interaction.customId)
+        if (json.id.normalize() === 'deleteMessage'.normalize()) deleteMessage(interaction, json).catch(console.error)
+      })
+      .catch(console.error)
+})
+
+bot.login(process.env.TOKEN)
