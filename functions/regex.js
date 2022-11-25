@@ -1,8 +1,11 @@
-const { vxBaseUrl } = require('../config.json')
-const { isVideo } = require('./twitterUtils')
-const regex = /https?:\/\/(.+?\.)?twitter\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/igm
+const { generateFixedUrl } = require('./urlUtils')
+const { analyzeTweet, isVideo, isQuotingVideo } = require('./twitterUtils')
+const regex = /https?:\/\/twitter\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/img
 
-const hasTwitterLink = (message) => regex.test(message)
+const hasTwitterLink = (message) => {
+  const regexLink = new RegExp(regex)
+  return regexLink.test(message)
+}
 
 const getVxTwitterLink = async (message) => {
   const regexLink = new RegExp(regex)
@@ -11,21 +14,22 @@ const getVxTwitterLink = async (message) => {
     video: 0
   }
 
-  const match = message.match(regexLink)
+  const links = message.match(regexLink)
 
-  for (let i = 0; i < match.length; i++) {
-    const link = match[i]
+  for (const link of links) {
     const tweetId = link.split('/').at(-1).split('?')[0]
-    const containsVideo = await isVideo(tweetId).catch(console.error)
+    const analyzedTweet = await analyzeTweet(tweetId)
 
+    const containsVideo = await isVideo(analyzedTweet)
     if (containsVideo) {
-      let recomposedUrl = link.split('/')
-      recomposedUrl.splice(0, 2)
-      recomposedUrl = recomposedUrl.join('/')
-      recomposedUrl = recomposedUrl.replace('twitter.com', vxBaseUrl)
-
-      resp.message = resp.message.replace(link, recomposedUrl)
+      resp.message = resp.message.replace(link, generateFixedUrl(link))
       resp.video += 1
+    } else {
+      // Check that the tweet is not quoting a tweet with video
+      if (await isQuotingVideo(analyzedTweet)) {
+        resp.message = resp.message.replace(link, generateFixedUrl(link))
+        resp.video += 1
+      }
     }
   }
 
