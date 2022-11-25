@@ -6,13 +6,14 @@ require('dotenv').config()
 const bot = new Client({ intents: 3276799 })
 
 bot.on('ready', async () => {
-  console.log(bot.user)
+  console.log(`🚀 ${bot.user.username} is running!`)
 })
 
 bot.on('messageCreate', async message => {
   if (!hasTwitterLink(message.content) || message.author.bot) return
 
   const resp = await getVxTwitterLink(message.content)
+
   if (resp.video <= 0) return
 
   const deleteButton = new ActionRowBuilder()
