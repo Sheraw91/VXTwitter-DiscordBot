@@ -41,6 +41,7 @@ const getVxTwitterLink = async (message) => {
   return resp;
 };
 
+
 module.exports = {
   hasTwitterLink,
   getVxTwitterLink,
