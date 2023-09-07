@@ -1,7 +1,7 @@
 const { generateFixedUrl } = require("./urlUtils");
 // const { analyzeTweet, isVideo, isQuotingVideo } = require("./twitterUtils");
 const regex =
-  /https?:\/\/(twitter|x)\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/gim;
+  /https?:\/\/([twitter|x]\.com)(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/gim;
 
 const hasTwitterLink = (message) => {
   const regexLink = new RegExp(regex);
@@ -18,7 +18,12 @@ const getVxTwitterLink = async (message) => {
   const links = message.match(regexLink);
 
   for (const link of links) {
-    resp.message = resp.message.replace(link, generateFixedUrl(link));
+    const result = new RegExp(regex).exec(link);
+    // Getting the hostname
+    const hostname = result[1]
+    const url = result[2]
+    
+    resp.message = resp.message.replace(link, generateFixedUrl(hostname, url));
     resp.video += 1;
 
     /* API IS NOT FREE ANYMORE */
