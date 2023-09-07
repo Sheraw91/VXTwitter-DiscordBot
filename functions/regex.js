@@ -19,11 +19,10 @@ const getVxTwitterLink = async (message) => {
 
   for (const link of links) {
     const result = new RegExp(regex).exec(link);
-    // Getting the hostname
-    const hostname = result[1]
-    const url = result[2]
+    // Getting url after hostname
+    const url = result[2];
     
-    resp.message = resp.message.replace(link, generateFixedUrl(hostname, url));
+    resp.message = resp.message.replace(link, generateFixedUrl(url));
     resp.video += 1;
 
     /* API IS NOT FREE ANYMORE */
