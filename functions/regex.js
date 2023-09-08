@@ -1,7 +1,6 @@
 const { generateFixedUrl } = require("./urlUtils");
 // const { analyzeTweet, isVideo, isQuotingVideo } = require("./twitterUtils");
-const regex =
-  /https?:\/\/(twitter|x)\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/gim;
+const regex = /https?:\/\/(twitter|x)\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/gim;
 
 
 const hasTwitterLink = (message) => {
