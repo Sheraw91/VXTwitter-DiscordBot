@@ -3,6 +3,7 @@ const { generateFixedUrl } = require("./urlUtils");
 const regex =
   /https?:\/\/(twitter|x)\.com(\/[A-Za-z0-9\-\._~:\/\?#\[\]@!$&'\(\)\*\+,;\=]*)/gim;
 
+
 const hasTwitterLink = (message) => {
   const regexLink = new RegExp(regex);
   return regexLink.test(message);
