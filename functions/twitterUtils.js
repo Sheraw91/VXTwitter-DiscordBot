@@ -3,7 +3,7 @@ require('dotenv').config()
 const { getTweetIdFromUrl } = require('./urlUtils')
 
 const analyzeTweet = async (tweetId) => axios
-  .get(`https://api.twitter.com/2/tweets/${tweetId}?expansions=attachments.media_keys&tweet.fields=entities`, {
+  .get(`https://api.twitter.com/2/tweets/${tweetId}?expansions=attachments.media_keys&media.fields=type`, {
     headers: {
       authorization: `Bearer ${process.env.TWITTER_TOKEN}`,
     }
